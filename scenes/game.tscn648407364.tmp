@@ -351,8 +351,6 @@ texture = SubResource("GradientTexture2D_kvpfn")
 
 [node name="light" type="Node2D" parent="." unique_id=751370533]
 
-[node name="hearts" type="Node2D" parent="." unique_id=642471170]
-
 [node name="fish" type="Node2D" parent="." unique_id=1301284396]
 
 [node name="sword" type="Node2D" parent="." unique_id=806000318]

@@ -54,6 +54,11 @@ func light():
 				
 		game.lightcount()
 
+func heart():
+	if health < 3:
+		health += 1
+		HBar.setvalue(health)
+
 func hit():
 	%Hit.play()
 	if not immune:

@@ -13,6 +13,7 @@ var maxFish = 20
 @export var badthing: PackedScene
 @export var swordfish: PackedScene
 @export var lightthing: PackedScene
+@export var heartthing: PackedScene
 @export var sillydih: PackedScene
 @export var mareczek: PackedScene
 @export var tenma: PackedScene
@@ -49,10 +50,6 @@ func _physics_process(delta: float) -> void:
 			if fish[i].position.x > 1800 or fish[i].position.x < -200:
 				fish[i].queue_free()
 				fishcount -= 1
-	var light = $light.get_children()
-	if light != null:
-		for i in range(light.size()):
-			light[i].position.y -= 350 * delta
 
 func retry():
 	currentfih1 = badthing
@@ -69,11 +66,8 @@ func retry():
 	$Death.visible = false
 	play_cg()
 	startlighting()
+	startheart()
 	$fader.play("RESET")
-	played1 = false
-	played2 = false
-	played3 = false
-	
 	
 	var fish = $fish.get_children()
 	if fish != null:
@@ -146,12 +140,30 @@ func spawn_light():
 			newlight.position = Vector2(1000, 1000)
 		3:
 			newlight.position = Vector2(1400, 1000)
+			
+func spawn_heart():
+	var newheart = heartthing.instantiate()
+	$hearts.add_child(newheart)
+	var r = randi_range(0, 3)
+	match r:
+		0:
+			newheart.position = Vector2(300, 1000)
+		1:
+			newheart.position = Vector2(500, 1000)
+		2:
+			newheart.position = Vector2(1100, 1000)
+		3:
+			newheart.position = Vector2(1300, 1000)
 
 func startlighting():
 	while game:
 		await get_tree().create_timer(7).timeout
 		spawn_light()
 		
+func startheart():
+	while game:
+		await get_tree().create_timer(30).timeout
+		spawn_heart()
 
 func die():
 	if depth > SaveLoad.high_score:
@@ -166,30 +178,22 @@ func die():
 func _on_retry_pressed() -> void:
 	retry()
 
-var played1 = false
-var played2 = false
-var played3 = false
-
 func depthcount():
 	while game:
 		if depth < 100:
 			maxFish = 20
-		elif depth > 99 and depth < 250:
-			if not played1:
-				maxFish = 0
-				$fader.play("fade1")
-				played1 = true
-				currentfih1 = sillydih
-				currentfih2 = mareczek
-				newlayer(40)
-		elif depth > 249 and depth < 500:
-			if not played2:
-				maxFish = 0
-				$fader.play("fade2")
-				played2 = true
-				currentfih1 = tenma
-				currentfih2 = johnfih
-				newlayer(60)
+		elif depth == 100:
+			maxFish = 0
+			$fader.play("fade1")
+			currentfih1 = sillydih
+			currentfih2 = mareczek
+			newlayer(40)
+		elif depth == 250:
+			maxFish = 0
+			$fader.play("fade2")
+			currentfih1 = tenma
+			currentfih2 = johnfih
+			newlayer(60)
 		if get_tree().paused == false:
 			await get_tree().create_timer(0.3).timeout
 			depth += 1
